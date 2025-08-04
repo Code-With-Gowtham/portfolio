@@ -1,5 +1,5 @@
-const username = "ASWINNIDESH";
-const excludeRepo = "ASWINNIDESH"; // Change this to your portfolio repo name if different
+const username = "Code-With-Gowtham";
+const excludeRepo = "Code-With-Gowtham"; // Change this to your portfolio repo name if different
 
 async function fetchGithub() {
   try {
