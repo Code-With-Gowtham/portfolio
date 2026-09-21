@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Gowtham Portfolio</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
 
@@ -17,7 +17,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
-        <li><a href="#resumeBtn" id="nav-resume">Resume</a></li>
+        <li><a href="resume.html" id="nav-resume" target="_blank">Resume</a></li>
       </ul>
     </div>
   </nav>
@@ -25,10 +25,10 @@
     <section class="hero" id="hero">
       <div class="hero-left">
         <h2 class="hero-title">Hello, I’m <span id="name">Gowtham</span></h2>
-        <h1 id="title">Software Developer</h1>
+        <h1 id="title">AI / ML Engineer</h1>
         <div class="cta">
           <a href="#projects" class="btn primary project">My Projects</a>
-          <a id="resumeBtn" target="_blank" class="btn outline">Resume</a>
+          <a id="resumeBtn" target="_blank" class="btn outline" href="resume.html">Resume</a>
         </div>
         <div class="skills-bar" id="skills"></div>
       </div>
@@ -44,26 +44,16 @@
 
     <!-- About -->
     <section class="about" id="about">
-      <div class="about-icons">
-        <div>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="Web" />
-          <p>Frontend</p>
-        </div>
-        <div>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="App" />
-          <p>Backend</p>
-        </div>
-        <div>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="Hosting" />
-          <p>Database</p>
-        </div>
-      </div>
+
       <div class="about-text">
         <h2>About me</h2>
         <p id="bio">
-          Hi! I'm Gowtham, a passionate software developer with a strong foundation in both frontend and backend technologies. I love building modern web applications that are fast, responsive, and user-friendly. My journey started with curiosity for how things work on the web, and it quickly grew into a full-time passion for coding and problem-solving.<br><br>
-          I enjoy working with JavaScript, React, Node.js, and MongoDB, but I'm always eager to learn new tools and frameworks. Whether it's designing a beautiful UI or architecting a robust backend, I strive to deliver clean, maintainable, and scalable code.<br><br>
-          When I'm not coding, you’ll find me exploring new tech trends, contributing to open-source projects, or sharing knowledge with the developer community. Let's connect and build something amazing together!
+          <br>      
+          Hi! I'm Gowtham, a passionate AI/ML enthusiast and aspiring Full Stack Developer with a strong interest in building intelligent, practical, and user-friendly applications..<br><br>
+          I enjoy working with Python, Machine Learning, FastAPI, React, MySQL, and REST APIs, and I'm continuously exploring new technologies in AI and software development. I like turning ideas into real-world applications by combining intelligent backend systems with clean, responsive user interfaces.<br><br>
+          My journey in technology started with curiosity about how software works, which gradually developed into a passion for coding, problem-solving, Artificial Intelligence, and Machine Learning. I enjoy learning new concepts, experimenting with different technologies, and improving my development skills through hands-on projects.<br><br>
+          When I'm not coding, I enjoy exploring AI/ML trends, emerging technologies, and developer tools, while continuously working on personal projects and expanding my knowledge.<br><br>
+          I'm always excited to learn, build, and collaborate on meaningful projects. Let's connect and build something amazing together!
         </p>
         <div class="stats">
           <div>
@@ -75,34 +65,73 @@
         </div>
       </div>
     </section>
+
+    <!-- Education -->
+    <section class="education" id="education">
+      <div class="education-card">
+        <h2>Education</h2>
+        <h3>B.Tech - Artificial Intelligence and Data Science</h3>
+        <p class="education-institution">RVS College of Engineering and Technology, Coimbatore</p>
+        <div class="education-details">
+          <span>2023 - 2027</span>
+          <span>CGPA: 8.26</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Internships -->
+    <section class="internships" id="internships">
+      <div class="internships-heading">
+        <h2>Internship</h2>
+      </div>
+      <div class="internship-grid">
+        <article class="internship-card">
+          <h3>AI/ML Intern</h3>
+          <h4>Carpediem Tech Innovations</h4>
+          <p class="internship-date">Jun 2025 - Jul 2025</p>
+          <ul>
+            <li>Developed ML models using Python</li>
+            <li>Performed data preprocessing</li>
+            <li>Trained and evaluated models</li>
+            <li>Worked on diabetes prediction</li>
+          </ul>
+        </article>
+        <article class="internship-card">
+          <h3>Web Development Intern</h3>
+          <h4>Litz Tech</h4>
+          <p class="internship-date">Dec 2025 - Jan 2026</p>
+          <ul>
+            <li>Developed responsive web interfaces</li>
+            <li>Worked with HTML, CSS and JavaScript</li>
+            <li>Integrated frontend and backend components</li>
+            <li>Debugged and improved applications</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
     <!-- tech stack  -->
      <h2 class="techstack">TECH STACK</h2>
     <div align="center" class="tech-stack">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="30" alt="JavaScript" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="30" alt="React" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" height="30" alt="MySQL" />
       <img width="12" />
-      <img src="./image/rapidbrains-expressjs.webp" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" height="30" alt="MongoDB" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="30" alt="HTML5" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" height="30" alt="CSS3" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" height="30" alt="Bootstrap" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" alt="Python" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" height="30" />
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg" height="30" alt="FastAPI" />
       <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" height="30" />
-      <img width="12" />
-      <img src="./image/amazon-web-services.png" height="30" />
-      <img width="12" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="30" />
-      <img width="12" />
-     
+       
     </div>
 
     <!-- Projects -->
@@ -120,18 +149,18 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" height="36" alt="VS Code" style="margin:0 10px;" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" height="36" alt="GitHub" style="margin:0 10px;" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" height="36" alt="Git" style="margin:0 10px;" />
-</div>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="30" alt="Docker" style="margin:0 10px;" />
 
     <!-- Contact Section -->
 <section class="contact" id="contact">
   <h2 class="contact-title">Contact</h2>
   <div class="contact-container">
     <p>I'm always open to new opportunities, collaborations, or just a friendly chat! Reach out to me through any of the platforms below:</p>
-    <form class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
+    <form class="contact-form" action="mailto:gowthamvicky2526@gmail.com" method="POST" enctype="text/plain">
       <input type="text" name="name" placeholder="Your Name" required />
       <input type="email" name="email" placeholder="Your Email" required />
       <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
-      <button type="submit" class="btn primary">Send Message</button>
+      <button type="submit" class="btn primary" >Send Message</button>
     </form>
     <div class="contact-links">
       <a href="mailto:gowthamvicky2526@gmail.com" class="contact-link" target="_blank">
@@ -149,5 +178,4 @@
 
     <script src="style.js"></script>
   </body>
-</html>
-
+</html> 

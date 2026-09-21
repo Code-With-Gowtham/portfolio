@@ -11,11 +11,15 @@ async function fetchGithub() {
     document.getElementById("avatar").src = user.avatar_url;
     document.getElementById("name").textContent = user.name || user.login;
     // document.getElementById("bio").textContent = user.bio || ""; // <-- Remove this line
-    document.getElementById("resumeBtn").href = user.blog || user.html_url;
+    // document.getElementById("resumeBtn").href = user.blog || user.html_url;
 
     const reposRes = await fetch(
-      `https://api.github.com/users/${username}/repos?sort=updated`
+      `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
     );
+    if (!reposRes.ok) {
+      const errorData = await reposRes.json().catch(() => ({}));
+      throw new Error(errorData.message || "Unable to load GitHub repositories");
+    }
     const repos = await reposRes.json();
     // Exclude forked repos and the portfolio repo itself
     const top6 = repos
@@ -35,20 +39,11 @@ async function fetchGithub() {
       grid.appendChild(div);
     });
 
-    // Aggregate topics from all top6 repos for tech stack
+    // Aggregate topics already included in the repository response.
     const allTopics = new Set();
-    await Promise.all(
-      top6.map(async (repo) => {
-        const topicsRes = await fetch(
-          `https://api.github.com/repos/${username}/${repo.name}/topics`,
-          {
-            headers: { Accept: "application/vnd.github.mercy-preview+json" },
-          }
-        );
-        const topicsData = await topicsRes.json();
-        (topicsData.names || []).forEach((topic) => allTopics.add(topic));
-      })
-    );
+    top6.forEach((repo) => {
+      (repo.topics || []).forEach((topic) => allTopics.add(topic));
+    });
 
     // Display tech stack
     const bar = document.getElementById("skills");
@@ -62,8 +57,11 @@ async function fetchGithub() {
       });
   } catch (err) {
     console.error(err);
+    const message = err.message.includes("rate limit")
+      ? "GitHub is temporarily rate-limiting requests. Please try again later."
+      : "Could not load projects from GitHub.";
     document.getElementById("projects-list").innerHTML =
-      "<p>Could not load projects. Check your GitHub username or network.</p>";
+      `<p>${message}</p>`;
   }
 }
 
