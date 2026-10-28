@@ -1,80 +1,118 @@
+
 const username = "Code-With-Gowtham";
-const excludeRepo = "Code-With-Gowtham"; // Change this to your portfolio repo name if different
+const excludeRepo = "Code-With-Gowtham";
 
 async function fetchGithub() {
+  const grid = document.getElementById("projects-list");
+  const count = document.getElementById("projects-count");
+  const skills = document.getElementById("skills");
+
   try {
-    const res = await fetch(`https://api.github.com/users/${username}`);
-    if (!res.ok) throw new Error("User not found");
-    const user = await res.json();
-
-    // Update UI (remove GitHub bio update)
-    document.getElementById("avatar").src = user.avatar_url;
-    document.getElementById("name").textContent = user.name || user.login;
-    // document.getElementById("bio").textContent = user.bio || ""; // <-- Remove this line
-    // document.getElementById("resumeBtn").href = user.blog || user.html_url;
-
-    const reposRes = await fetch(
-      `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
+    // 1. Load profile details
+    const profileResponse = await fetch(
+      `https://api.github.com/users/${username}`
     );
-    if (!reposRes.ok) {
-      const errorData = await reposRes.json().catch(() => ({}));
-      throw new Error(errorData.message || "Unable to load GitHub repositories");
+
+    if (!profileResponse.ok) {
+      throw new Error("Unable to load GitHub profile.");
     }
-    const repos = await reposRes.json();
-    // Exclude forked repos and the portfolio repo itself
-    const top6 = repos
-      .filter((r) => !r.fork && r.name !== excludeRepo)
-      .slice(0, 6);
 
-    document.getElementById("projects-count").textContent = top6.length;
-    const grid = document.getElementById("projects-list");
-    grid.innerHTML = ""; // Clear previous content
-    top6.forEach((repo) => {
-      const div = document.createElement("div");
-      div.className = "project-card";
-      div.innerHTML = `
-        <h3>${repo.name}</h3>
-        <p>${repo.description || ""}</p>
-        <a href="${repo.html_url}" target="_blank">View Repo</a>`;
-      grid.appendChild(div);
+    const user = await profileResponse.json();
+
+    document.getElementById("avatar").src = user.avatar_url;
+    document.getElementById("name").textContent =
+      user.name || user.login;
+
+    // 2. Count public repositories across all pages
+    let allRepos = [];
+    let page = 1;
+
+    while (true) {
+      const response = await fetch(
+        `https://api.github.com/users/${username}/repos?per_page=100&page=${page}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to load repository count.");
+      }
+
+      const repos = await response.json();
+      allRepos.push(...repos);
+
+      if (repos.length < 100) break;
+      page++;
+    }
+
+    count.textContent = allRepos.filter(
+      repo => repo.name !== excludeRepo
+    ).length;
+
+    // 3. Fetch pinned repositories from Netlify
+    const pinnedResponse = await fetch(
+      "/.netlify/functions/pinned-repos"
+    );
+
+    if (!pinnedResponse.ok) {
+      throw new Error("Unable to load pinned repositories.");
+    }
+
+    const pinnedRepos = await pinnedResponse.json();
+
+    // 4. Display only pinned repositories
+    grid.replaceChildren();
+
+    pinnedRepos.forEach(repo => {
+      const card = document.createElement("div");
+      card.className = "project-card";
+
+      const title = document.createElement("h3");
+      title.textContent = repo.name;
+
+      const description = document.createElement("p");
+      description.textContent = repo.description;
+
+      const language = document.createElement("span");
+      language.className = "project-language";
+      language.textContent = repo.language;
+
+      const link = document.createElement("a");
+      link.href = repo.html_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "View Repository";
+
+      card.append(title, description, language, link);
+      grid.appendChild(card);
     });
 
-    // Aggregate topics already included in the repository response.
-    const allTopics = new Set();
-    top6.forEach((repo) => {
-      (repo.topics || []).forEach((topic) => allTopics.add(topic));
-    });
+    // 5. Show languages from pinned repositories
+    if (skills) {
+      skills.replaceChildren();
 
-    // Display tech stack
-    const bar = document.getElementById("skills");
-    bar.innerHTML = "";
-    Array.from(allTopics)
-      .slice(0, 10)
-      .forEach((skill) => {
-        const span = document.createElement("span");
-        span.textContent = skill;
-        bar.appendChild(span);
+      const languages = [
+        ...new Set(
+          pinnedRepos
+            .map(repo => repo.language)
+            .filter(language => language !== "Not specified")
+        )
+      ];
+
+      languages.forEach(language => {
+        const tag = document.createElement("span");
+        tag.textContent = language;
+        skills.appendChild(tag);
       });
-  } catch (err) {
-    console.error(err);
-    const message = err.message.includes("rate limit")
-      ? "GitHub is temporarily rate-limiting requests. Please try again later."
-      : "Could not load projects from GitHub.";
-    document.getElementById("projects-list").innerHTML =
-      `<p>${message}</p>`;
+    }
+
+    if (pinnedRepos.length === 0) {
+      grid.textContent = "No pinned repositories found.";
+    }
+
+  } catch (error) {
+    console.error(error);
+    grid.textContent =
+      "Could not load projects. Please try again later.";
   }
 }
 
 fetchGithub();
-
-document.querySelectorAll("section").forEach((section) => {
-  const reveal = () => {
-    const rect = section.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 100) {
-      section.classList.add("visible");
-      window.removeEventListener("scroll", reveal);
-    }
-  };
-  window.addEventListener("scroll", reveal);
-  reveal();
-});
