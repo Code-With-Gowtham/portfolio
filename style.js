@@ -23,13 +23,13 @@ async function fetchGithub() {
     document.getElementById("name").textContent =
       user.name || user.login;
 
-    // 2. Count public repositories across all pages
+    // 2. Load public repositories for the project count and static-host fallback
     let allRepos = [];
     let page = 1;
 
     while (true) {
       const response = await fetch(
-        `https://api.github.com/users/${username}/repos?per_page=100&page=${page}`
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100&page=${page}`
       );
 
       if (!response.ok) {
@@ -43,25 +43,39 @@ async function fetchGithub() {
       page++;
     }
 
-    count.textContent = allRepos.filter(
-      repo => repo.name !== excludeRepo
-    ).length;
-
-    // 3. Fetch pinned repositories from Netlify
-    const pinnedResponse = await fetch(
-      "/.netlify/functions/pinned-repos"
+    const publicRepos = allRepos.filter(
+      repo => !repo.fork && repo.name !== excludeRepo
     );
+    count.textContent = publicRepos.length;
 
-    if (!pinnedResponse.ok) {
-      throw new Error("Unable to load pinned repositories.");
+    // Pinned repositories require the Netlify function; use public repos on static hosts.
+    let projects;
+    try {
+      const pinnedResponse = await fetch("/.netlify/functions/pinned-repos");
+
+      if (!pinnedResponse.ok) {
+        throw new Error(`Pinned repositories returned ${pinnedResponse.status}.`);
+      }
+
+      const pinnedRepos = await pinnedResponse.json();
+      if (!Array.isArray(pinnedRepos)) {
+        throw new Error("Pinned repositories response is invalid.");
+      }
+      projects = pinnedRepos;
+    } catch (error) {
+      console.warn("Pinned repositories unavailable; showing public repositories instead.", error);
+      projects = publicRepos.slice(0, 6).map(repo => ({
+        name: repo.name,
+        description: repo.description || "Explore this project.",
+        html_url: repo.html_url,
+        language: repo.language || "Not specified"
+      }));
     }
 
-    const pinnedRepos = await pinnedResponse.json();
-
-    // 4. Display only pinned repositories
+    // 3. Display pinned repositories or the static-host fallback
     grid.replaceChildren();
 
-    pinnedRepos.forEach(repo => {
+    projects.forEach(repo => {
       const card = document.createElement("div");
       card.className = "project-card";
 
@@ -85,15 +99,15 @@ async function fetchGithub() {
       grid.appendChild(card);
     });
 
-    // 5. Show languages from pinned repositories
+    // 4. Show languages from the displayed projects
     if (skills) {
       skills.replaceChildren();
 
       const languages = [
         ...new Set(
-          pinnedRepos
+          projects
             .map(repo => repo.language)
-            .filter(language => language !== "Not specified")
+            .filter(language => language && language !== "Not specified")
         )
       ];
 
@@ -104,7 +118,7 @@ async function fetchGithub() {
       });
     }
 
-    if (pinnedRepos.length === 0) {
+    if (projects.length === 0) {
       grid.textContent = "No pinned repositories found.";
     }
 
@@ -116,3 +130,23 @@ async function fetchGithub() {
 }
 
 fetchGithub();
+
+const sections = document.querySelectorAll("section");
+
+if ("IntersectionObserver" in window) {
+  const sectionObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          sectionObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "0px 0px -100px 0px" }
+  );
+
+  sections.forEach(section => sectionObserver.observe(section));
+} else {
+  sections.forEach(section => section.classList.add("visible"));
+}
