@@ -68,6 +68,7 @@ async function fetchGithub() {
         name: repo.name,
         description: repo.description || "Explore this project.",
         html_url: repo.html_url,
+        homepage_url: repo.homepage,
         language: repo.language || "Not specified"
       }));
     }
@@ -82,20 +83,35 @@ async function fetchGithub() {
       const title = document.createElement("h3");
       title.textContent = repo.name;
 
-      const description = document.createElement("p");
-      description.textContent = repo.description;
+      const actions = document.createElement("div");
+      actions.className = "project-actions";
 
-      const language = document.createElement("span");
-      language.className = "project-language";
-      language.textContent = repo.language;
+      const repoLink = document.createElement("a");
+      repoLink.href = repo.html_url;
+      repoLink.target = "_blank";
+      repoLink.rel = "noopener noreferrer";
+      repoLink.textContent = "View Repo";
+      actions.appendChild(repoLink);
 
-      const link = document.createElement("a");
-      link.href = repo.html_url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "View Repository";
+      if (repo.homepage_url) {
+        try {
+          const liveUrl = new URL(repo.homepage_url);
+          if (liveUrl.protocol !== "https:" && liveUrl.protocol !== "http:") {
+            throw new Error("Live project URL must use HTTP or HTTPS.");
+          }
 
-      card.append(title, description, language, link);
+          const liveLink = document.createElement("a");
+          liveLink.href = liveUrl.href;
+          liveLink.target = "_blank";
+          liveLink.rel = "noopener noreferrer";
+          liveLink.textContent = "LIVE LINK";
+          actions.appendChild(liveLink);
+        } catch (error) {
+          console.warn(`Ignoring invalid live URL for ${repo.name}.`, error);
+        }
+      }
+
+      card.append(title, actions);
       grid.appendChild(card);
     });
 

@@ -18,6 +18,7 @@ export default async function handler() {
               name
               description
               url
+              homepageUrl
               primaryLanguage {
                 name
               }
@@ -64,6 +65,7 @@ export default async function handler() {
       name: repo.name,
       description: repo.description || "Explore this project.",
       html_url: repo.url,
+      homepage_url: repo.homepageUrl,
       language: repo.primaryLanguage?.name || "Not specified"
     }));
 
